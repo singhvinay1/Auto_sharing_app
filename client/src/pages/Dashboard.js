@@ -7,6 +7,7 @@ function Dashboard() {
   const [message, setMessage] = useState('');
   const [notification, setNotification] = useState('');
   const [prevBookedIds, setPrevBookedIds] = useState([]);
+  const [fadeOut, setFadeOut] = useState(false);
 
   const token = localStorage.getItem('token');
 
@@ -50,7 +51,17 @@ function Dashboard() {
   };
 
   // Hide booking form if user has a ride with a driver assigned
-  const hasAssignedRide = rides.some(ride => ride.driver && ride.driver.name);
+  const hasAssignedRide = rides.some(ride => ride.driver && ride.driver.name && ride.status !== 'completed');
+  const assignedRide = rides.find(ride => ride.driver && ride.driver.name && ride.status !== 'completed');
+
+  // Animation: fade out cards when ride is assigned
+  useEffect(() => {
+    if (hasAssignedRide) {
+      setFadeOut(true);
+      const timer = setTimeout(() => setFadeOut(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [hasAssignedRide]);
 
   return (
     <div>
@@ -64,25 +75,33 @@ function Dashboard() {
         </form>
       )}
       {message && <p className="center" style={{ color: 'red' }}>{message}</p>}
-      <h3 className="center" style={{ color: '#2d6cdf', marginTop: 32 }}>My Rides</h3>
-      {rides.length === 0 && <p className="center">No rides yet.</p>}
-      {rides.map((ride, i) => (
-        <div key={ride._id || i} className="card">
-          <div className="rideTitle">Time Slot: {ride.timeSlot}</div>
-          <b>Pickup:</b> {ride.pickupLocation}<br />
-          <b>Drop:</b> {ride.dropLocation}<br />
-          <b>Status:</b> {ride.status}<br />
-          <b>Members:</b>
-          <ul>
-            {ride.students.map(s => <li key={s.email}>{s.name} ({s.collegeId})</li>)}
-          </ul>
-          {ride.driver && ride.driver.name && (
-            <div className="driverBox">
-              <b>Your auto driver {ride.driver.name} ({ride.driver.phone}) will wait outside your college.</b>
-            </div>
-          )}
+      {hasAssignedRide ? (
+        <div className="card center bounce" style={{ maxWidth: 500, fontSize: 20, background: '#e2e3ff', color: '#383d56' }}>
+          <b>Your auto is on the way!</b>
         </div>
-      ))}
+      ) : (
+        <>
+          <h3 className="center" style={{ color: '#2d6cdf', marginTop: 32 }}>My Rides</h3>
+          {rides.length === 0 && <p className="center">No rides yet.</p>}
+          {rides.map((ride, i) => (
+            <div key={ride._id || i} className={`card${fadeOut ? ' fadeOut' : ''}`}>
+              <div className="rideTitle">Time Slot: {ride.timeSlot}</div>
+              <b>Pickup:</b> {ride.pickupLocation}<br />
+              <b>Drop:</b> {ride.dropLocation}<br />
+              <b>Status:</b> {ride.status}<br />
+              <b>Members:</b>
+              <ul>
+                {ride.students.map(s => <li key={s.email}>{s.name} ({s.collegeId})</li>)}
+              </ul>
+              {ride.driver && ride.driver.name && (
+                <div className="driverBox">
+                  <b>Your auto driver {ride.driver.name} ({ride.driver.phone}) will wait outside your college.</b>
+                </div>
+              )}
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }

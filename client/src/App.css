@@ -24,6 +24,30 @@ body {
   margin: 16px auto;
   padding: 24px;
   max-width: 500px;
+  animation: fadeIn 0.7s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fadeOut {
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-30px); }
+}
+
+.bounce {
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
 }
 
 .form {
@@ -36,6 +60,11 @@ body {
   border-radius: 12px;
   box-shadow: 0 2px 8px #0001;
   padding: 24px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.form:focus-within {
+  box-shadow: 0 4px 16px #2d6cdf33;
+  transform: scale(1.01);
 }
 
 input {

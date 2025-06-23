@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -12,10 +12,30 @@ function PrivateRoute({ children }) {
   return token ? children : <Navigate to="/login" />;
 }
 
+function Header() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+  return (
+    <div className="header">
+      AutoBuddy
+      {token && (
+        <button style={{ float: 'right', marginRight: 24, marginTop: -4 }} onClick={handleLogout}>
+          Logout
+        </button>
+      )}
+    </div>
+  );
+}
+
 function App() {
   return (
     <>
-      <div className="header">AutoBuddy</div>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
