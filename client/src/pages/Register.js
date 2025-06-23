@@ -11,7 +11,7 @@ function Register() {
     e.preventDefault();
     setMessage('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', form);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, form);
       setMessage('Registration successful! You can now log in.');
     } catch (err) {
       setMessage(err.response?.data?.message || 'Registration failed.');

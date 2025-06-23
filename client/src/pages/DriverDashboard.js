@@ -8,7 +8,7 @@ function DriverDashboard() {
 
   const fetchRides = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/ride/available');
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/ride/available`);
       setRides(res.data.rides);
     } catch {
       setMessage('Failed to fetch rides.');
@@ -23,7 +23,7 @@ function DriverDashboard() {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/ride/assign', { rideId, driverName: driver.name, driverPhone: driver.phone });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/ride/assign`, { rideId, driverName: driver.name, driverPhone: driver.phone });
       setMessage('Ride assigned!');
       fetchRides();
     } catch {

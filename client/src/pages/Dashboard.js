@@ -13,7 +13,7 @@ function Dashboard() {
 
   const fetchRides = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/ride/my', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/ride/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRides(res.data.rides);
@@ -38,7 +38,7 @@ function Dashboard() {
     e.preventDefault();
     setMessage('');
     try {
-      await axios.post('http://localhost:5000/api/ride/book', form, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/ride/book`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage('Ride booking requested!');
